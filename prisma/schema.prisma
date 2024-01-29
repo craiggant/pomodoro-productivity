@@ -16,6 +16,8 @@ model User {
   password String
   settings Settings[]
   tasks    Task[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Settings {
@@ -27,6 +29,8 @@ model Settings {
   longBreakAfter     Int
   numberToComplete   Int
   user               User   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Task {
@@ -35,5 +39,7 @@ model Task {
   description String
   completed   Boolean
   user        User   @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
