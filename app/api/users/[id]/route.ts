@@ -16,7 +16,9 @@ export async function GET(request: NextRequest, { params }: TRouteParams) {
 		if (!user)
 			return NextResponse.json({ error: 'Not Found' }, { status: 404 });
 
-		return NextResponse.json(user, { status: 200 });
+		const { password, createdAt, updatedAt, ...rest } = user;
+
+		return NextResponse.json({ user: rest }, { status: 200 });
 	} catch (e) {
 		console.error(e);
 

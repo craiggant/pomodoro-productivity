@@ -7,11 +7,18 @@ type TUniqueUserProperties = {
 	email?: string;
 };
 
+type TNewUserProperties = {
+	email: string;
+	password: string;
+};
+
 type TUniqueUserKeys = keyof TUniqueUserProperties & keyof User;
 
 type TUniqueUserProperty = {
-	[K in TUniqueUserKeys]: TUniqueUserProperties[K];
-};
+	[K in TUniqueUserKeys]: {
+		[P in K]: TUniqueUserProperties[P];
+	};
+}[TUniqueUserKeys];
 
 export class UsersRepository {
 	constructor() {}
@@ -22,9 +29,9 @@ export class UsersRepository {
 		});
 	}
 
-	static async createUser(email: string, password: string) {
-		const salt = await bcrypt.genSalt(10);
-		const hashedPassword = await bcrypt.hash(password, salt);
+	static async createUser({ email, password }: TNewUserProperties) {
+		const salt = bcrypt.genSaltSync(parseInt(process.env.SALT_ROUNDS!));
+		const hashedPassword = bcrypt.hashSync(password, salt);
 
 		return await prisma.user.create({
 			data: {
